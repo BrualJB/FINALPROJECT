@@ -1,0 +1,145 @@
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.util.LinkedList;
+
+public class UserPanel extends JFrame {
+    private LinkedList<Book> books = new LinkedList<>();
+    private JTable bookTable;
+    private DefaultTableModel tableModel;
+    private JComboBox<String> genreComboBox;
+
+    public UserPanel() {
+        setTitle("UserPanel");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Create a panel for the book table and controls
+        JPanel mainPanel = new JPanel(new BorderLayout());
+
+        // Create a panel for the controls
+        JPanel controlPanel = new JPanel();
+        genreComboBox = new JComboBox<>(new String[]{"All", "Mystery", "Science Fiction", "Fantasy", "Historical Fiction", "Romance", "Non-Fiction"});
+        controlPanel.add(new JLabel("Genre:"));
+        controlPanel.add(genreComboBox);
+
+        // Add the control panel and book table to the main panel
+        mainPanel.add(controlPanel, BorderLayout.NORTH);
+        initBookTable();
+        mainPanel.add(new JScrollPane(bookTable), BorderLayout.CENTER);
+
+        // Add the main panel to the frame
+        add(mainPanel);
+
+        // Load book data from file
+        loadDataFromFile();
+
+        // Add a listener to the genreComboBox to filter books by genre
+        genreComboBox.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String selectedGenre = (String) genreComboBox.getSelectedItem();
+                filterBooksByGenre(selectedGenre);
+            }
+        });
+
+        // Add a MouseListener to the bookTable to detect double clicks
+        bookTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) { // Detect double click
+                    int selectedRow = bookTable.getSelectedRow();
+                    if (selectedRow >= 0 && selectedRow < books.size()) {
+                        showBookDetails(books.get(selectedRow));
+                    }
+                }
+            }
+        });
+
+        setSize(800, 400);
+        setLocationRelativeTo(null);
+        setVisible(true);
+    }
+
+    // Loads Data from the "books.txt" file to the table
+    private void loadDataFromFile() {
+        try {
+            File file = new File("books.txt");
+            if (file.exists()) {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] data = line.split(",");
+                    String title = data[0];
+                    String author = data[1];
+                    String synopsis = data[2];
+                    int numOfPages = Integer.parseInt(data[3]);
+                    String genre = data[4];
+                    books.add(new Book(title, author, synopsis, numOfPages, genre));
+                    tableModel.addRow(new Object[]{title, author, genre, numOfPages});
+                }
+                br.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Filter books by genre
+    private void filterBooksByGenre(String genre) {
+        tableModel.setRowCount(0); // Clear the table
+        if ("All".equals(genre)) {
+            // If "All" is selected, show all books
+            for (Book book : books) {
+                tableModel.addRow(new Object[]{book.title, book.author, book.genre, book.numOfPages});
+            }
+        } else {
+            // Show books with the selected genre
+            for (Book book : books) {
+                if (book.genre.equals(genre)) {
+                    tableModel.addRow(new Object[]{book.title, book.author, book.genre, book.numOfPages});
+                }
+            }
+        }
+    }
+
+    // Show a new frame with book details, including synopsis
+    private void showBookDetails(Book book) {
+        JFrame detailsFrame = new JFrame("Book Details");
+        detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        detailsFrame.setLayout(new BorderLayout());
+
+        JTextArea detailsArea = new JTextArea();
+        detailsArea.setEditable(false);
+        detailsArea.append("Title: " + book.title + "\n");
+        detailsArea.append("Author: " + book.author + "\n");
+        detailsArea.append("Genre: " + book.genre + "\n");
+        detailsArea.append("Number of Pages: " + book.numOfPages + "\n");
+        detailsArea.append("Synopsis: " + book.synopsis);
+
+        detailsFrame.add(new JScrollPane(detailsArea), BorderLayout.CENTER);
+        detailsFrame.setSize(400, 400);
+        detailsFrame.setLocationRelativeTo(null);
+        detailsFrame.setVisible(true);
+    }
+
+    private void initBookTable() {
+        String[] columnNames = {"Title", "Author", "Genre", "Number of Pages"};
+        tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Make the table uneditable
+            }
+        };
+        bookTable = new JTable(tableModel);
+        bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        bookTable.setAutoCreateRowSorter(true);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new UserPanel();
+        });
+    }
+}
