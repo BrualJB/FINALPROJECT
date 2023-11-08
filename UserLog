@@ -15,6 +15,7 @@ import java.awt.Font;
 import javax.swing.JPasswordField;
 import java.awt.Color;
 import javax.swing.JCheckBox;
+import java.awt.Toolkit;
 
 public class UserLog extends Accounts {
     public JFrame userLogFrame;
@@ -31,6 +32,7 @@ public class UserLog extends Accounts {
 
     private void initialize() {
         userLogFrame = new JFrame();
+        userLogFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("/Users/icarus/Downloads/BookWhispers (1).png"));
         userLogFrame.setBounds(100, 100, 1026, 645);
         userLogFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         userLogFrame.setLocationRelativeTo(null);
@@ -40,13 +42,13 @@ public class UserLog extends Accounts {
 
         // Applicant Username
         ApplicantUser = new JTextField();
-        ApplicantUser.setBounds(63, 284, 294, 48);
+        ApplicantUser.setBounds(115, 172, 240, 40);
         userLogFrame.getContentPane().add(ApplicantUser);
         ApplicantUser.setColumns(10);
 
         // Show and Hide Password
         JCheckBox showHidePass = new JCheckBox("Show Password");
-        showHidePass.setBounds(236, 370, 114, 23);
+        showHidePass.setBounds(115, 279, 114, 23);
         showHidePass.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (showHidePass.isSelected()) {
@@ -61,22 +63,22 @@ public class UserLog extends Accounts {
 
         // Applicant Password
         ApplicantPassword = new JPasswordField();
-        ApplicantPassword.setBounds(63, 395, 294, 48);
+        ApplicantPassword.setBounds(115, 237, 240, 40);
         userLogFrame.getContentPane().add(ApplicantPassword);
 
         // BUTTONS
 
         // Login Button
-        JButton btn_ApplicantLog = new JButton("");
-        btn_ApplicantLog.setBounds(225, 455, 139, 40);
-        btn_ApplicantLog.setIcon(new ImageIcon("/Users/luiz/Downloads/LOGIN.png"));
+        JButton btn_ApplicantLog = new JButton("Login");
+        btn_ApplicantLog.setBounds(160, 314, 139, 40);
+        btn_ApplicantLog.setIcon(new ImageIcon(""));
         btn_ApplicantLog.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 String UsernameInput = ApplicantUser.getText();
                 String PasswordInput = ApplicantPassword.getText();
 
                 try {
-                    FileReader fileReader = new FileReader("D:\\Eclipse\\AS\\Accounts.txt");
+                    FileReader fileReader = new FileReader("Accounts.txt");
                     BufferedReader bufferedReader = new BufferedReader(fileReader);
 
                     String line;
@@ -148,8 +150,8 @@ public class UserLog extends Accounts {
         userLogFrame.getContentPane().add(btn_ApplicantLog);
 
         // Back Button
-        JButton BackButton = new JButton("");
-        BackButton.setBounds(73, 455, 139, 40);
+        JButton BackButton = new JButton("Back");
+        BackButton.setBounds(160, 402, 139, 40);
         BackButton.setIcon(new ImageIcon(" "));
         BackButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -161,10 +163,10 @@ public class UserLog extends Accounts {
         userLogFrame.getContentPane().add(BackButton);
 
         // Register Button
-        JButton btn_ApplicantReg = new JButton("REGISTER");
-        btn_ApplicantReg.setBounds(161, 582, 94, 29);
+        JButton btn_ApplicantReg = new JButton("Register");
+        btn_ApplicantReg.setBounds(160, 358, 139, 40);
         btn_ApplicantReg.setBackground(Color.LIGHT_GRAY);
-        btn_ApplicantReg.setFont(new Font("Lucida Grande", Font.PLAIN, 9));
+        btn_ApplicantReg.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
         btn_ApplicantReg.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
@@ -178,8 +180,8 @@ public class UserLog extends Accounts {
         // BACKGROUND
 
         JLabel ApplicantPass = new JLabel("New label");
-        ApplicantPass.setBounds(0, 0, 1026, 617);
-        ApplicantPass.setIcon(new ImageIcon(" "));
+        ApplicantPass.setBounds(6, -47, 1115, 674);
+        ApplicantPass.setIcon(new ImageIcon("/Users/icarus/Downloads/Login.png"));
         userLogFrame.getContentPane().add(ApplicantPass);
     }
 
