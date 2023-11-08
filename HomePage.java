@@ -7,6 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
 public class HomePage extends JFrame {
     private JPanel Home;
@@ -25,6 +26,7 @@ public class HomePage extends JFrame {
     }
 
     public HomePage() {
+    	setIconImage(Toolkit.getDefaultToolkit().getImage("/Users/icarus/Downloads/BookWhispers.png"));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1026, 645);
         Home = new JPanel();
@@ -58,8 +60,8 @@ public class HomePage extends JFrame {
         Home.add(btn_Admin);
 
         JLabel lbl_HomeBG = new JLabel("");
-        lbl_HomeBG.setIcon(new ImageIcon("path/to/your/background/image.png"));
-        lbl_HomeBG.setBounds(0, 0, 1026, 617);
+        lbl_HomeBG.setIcon(new ImageIcon("/Users/icarus/Downloads/BookWhispers.png"));
+        lbl_HomeBG.setBounds(0, 0, 1020, 617);
         Home.add(lbl_HomeBG);
     }
 }
