@@ -1,41 +1,19 @@
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import javax.swing.JPasswordField;
-import javax.swing.JCheckBox;
-import java.awt.Font;
-import javax.swing.SwingUtilities;
+import java.awt.event.ActionListener;
 
 public class AdminLog extends JFrame {
-
-    private JPanel AdLog;
-    private JTextField AdminUser;
-    private JButton btn_Login;
-    private JPasswordField AdminPass;
-    private JButton BackButton;
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    AdminLog frame = new AdminLog();
-                    frame.setVisible(true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-    }
+    private AdminPanel adminPanel;
 
     public AdminLog() {
+        JPanel AdLog;
+        JTextField AdminUser;
+        JButton btn_Login;
+        JPasswordField AdminPass;
+        JButton BackButton;
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 1026, 645);
         AdLog = new JPanel();
@@ -47,6 +25,10 @@ public class AdminLog extends JFrame {
         AdminUser = new JTextField();
         AdminUser.setBounds(105, 187, 240, 40);
         AdLog.add(AdminUser);
+
+        AdminPass = new JPasswordField();  // Moved the declaration here
+        AdminPass.setBounds(105, 250, 240, 40);
+        AdLog.add(AdminPass);
 
         JCheckBox showHideButton = new JCheckBox("Show Password");
         showHideButton.addActionListener(new ActionListener() {
@@ -62,10 +44,6 @@ public class AdminLog extends JFrame {
         showHideButton.setBounds(105, 302, 114, 23);
         AdLog.add(showHideButton);
 
-        AdminPass = new JPasswordField();
-        AdminPass.setBounds(105, 250, 240, 40);
-        AdLog.add(AdminPass);
-
         btn_Login = new JButton("Login");
         btn_Login.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -76,18 +54,17 @@ public class AdminLog extends JFrame {
                     AdminUser.setText("");
                     AdminPass.setText("");
                     JOptionPane.showMessageDialog(null, "Login Successfully!");
-                    // Perform action on successful login.
-                    
-                    // Assuming AdminPanel is the name of your admin panel class, you can navigate to it like this:
-                    AdminPanel adminPanel = new AdminPanel();
+                    adminPanel = new AdminPanel();
+                    adminPanel.loadDataFromFile();
                     adminPanel.setVisible(true);
+                    dispose(); // Close the current frame on successful login
                 } else {
                     JOptionPane.showMessageDialog(null, "Invalid Username and/or Password!");
+                    // Do not close the frame on failed login
                 }
-                dispose();
-            
             }
         });
+
 
         btn_Login.setBounds(154, 337, 139, 40);
         AdLog.add(btn_Login);
@@ -107,5 +84,18 @@ public class AdminLog extends JFrame {
         lbl_AdminLogBG.setIcon(new ImageIcon("/Users/icarus/Downloads/Login.png"));
         lbl_AdminLogBG.setBounds(0, 0, 1026, 617);
         AdLog.add(lbl_AdminLogBG);
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    AdminLog frame = new AdminLog();
+                    frame.setVisible(true);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }
