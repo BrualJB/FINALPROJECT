@@ -12,6 +12,7 @@ public class UserPanel extends JFrame {
     private JTable bookTable;
     private DefaultTableModel tableModel;
     private JComboBox<String> genreComboBox;
+    private JButton logoutButton; // Added logout button
 
     public UserPanel() {
         setTitle("UserPanel");
@@ -57,13 +58,26 @@ public class UserPanel extends JFrame {
             }
         });
 
+        // Create the logout button
+        logoutButton = new JButton("Logout");
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(logoutButton, BorderLayout.SOUTH);
+        mainPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        logoutButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                HomePage home = new HomePage();
+                home.setVisible(true);
+                dispose();
+            }
+        });
+
         setSize(800, 400);
         setLocationRelativeTo(null);
         setVisible(true);
     }
 
     // Loads Data from the "books.txt" file to the table
- // Loads Data from the "books.txt" file to the table
     private void loadDataFromFile() {
         try {
             File file = new File("books.txt");
@@ -72,18 +86,13 @@ public class UserPanel extends JFrame {
                 String line;
                 while ((line = br.readLine()) != null) {
                     String[] data = line.split("/");
-                    if (data.length == 5) {
-                        String title = data[0];
-                        String author = data[1];
-                        String synopsis = data[2];
-                        int numOfPages = Integer.parseInt(data[3]);
-                        String genre = data[4];
-                        books.add(new Book(title, author, synopsis, numOfPages, genre));
-                        tableModel.addRow(new Object[]{title, author, genre, numOfPages});
-                    } else {
-                        // Handle invalid data format
-                        System.out.println("Invalid data format: " + line);
-                    }
+                    String title = data[0];
+                    String author = data[1];
+                    String synopsis = data[2];
+                    int numOfPages = Integer.parseInt(data[3]);
+                    String genre = data[4];
+                    books.add(new Book(title, author, synopsis, numOfPages, genre));
+                    tableModel.addRow(new Object[]{title, author, genre, numOfPages});
                 }
                 br.close();
             }
@@ -91,7 +100,6 @@ public class UserPanel extends JFrame {
             e.printStackTrace();
         }
     }
-
 
     // Filter books by genre
     private void filterBooksByGenre(String genre) {
@@ -119,12 +127,9 @@ public class UserPanel extends JFrame {
         detailsFrame.setLayout(new BorderLayout());
 
         JTextArea detailsArea = new JTextArea();
+        detailsArea.setLineWrap(true); // Enable text wrapping
+        detailsArea.setWrapStyleWord(true); // Wrap at word boundaries
         detailsArea.setEditable(false);
-        
-        // Enable line wrap and word wrap
-        detailsArea.setLineWrap(true);
-        detailsArea.setWrapStyleWord(true);
-
         detailsArea.append("Title: " + book.title + "\n");
         detailsArea.append("Author: " + book.author + "\n");
         detailsArea.append("Genre: " + book.genre + "\n");
@@ -147,8 +152,10 @@ public class UserPanel extends JFrame {
             }
         };
         bookTable = new JTable(tableModel);
+        bookTable.getTableHeader().setReorderingAllowed(false);
         bookTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         bookTable.setAutoCreateRowSorter(true);
+        bookTable.setFocusable(false); // Make the table non-focusable
     }
 
     public static void main(String[] args) {
