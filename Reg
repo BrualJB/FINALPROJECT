@@ -28,7 +28,7 @@ public class Reg extends JFrame { // Extend JFrame to create a window
     private JButton btn_Clear;
     private JPasswordField Pass;
     private JCheckBox ShowHidePass;
-    private static final String FILE_PATH = "D:\\Eclipse\\AS\\Accounts.txt";
+    private static final String FILE_PATH = "Accounts.txt";
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
@@ -81,7 +81,7 @@ public class Reg extends JFrame { // Extend JFrame to create a window
 				}							
 			}
 		});
-		Name.setBounds(353, 140, 313, 44);
+		Name.setBounds(106, 211, 250, 31);
 		Register.add(Name);
 		Name.setColumns(10);
 		
@@ -99,7 +99,7 @@ public class Reg extends JFrame { // Extend JFrame to create a window
 			}
 		});
 		User.setColumns(10);
-		User.setBounds(353, 196, 313, 44);
+		User.setBounds(106, 168, 250, 31);
 		Register.add(User);
 		
 		//Show and hide Password
@@ -114,18 +114,18 @@ public class Reg extends JFrame { // Extend JFrame to create a window
 			}
 		});
 		ShowHidePass.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		ShowHidePass.setBounds(353, 299, 116, 23);
+		ShowHidePass.setBounds(364, 258, 116, 23);
 		Register.add(ShowHidePass);
 		
 		//Password
 		Pass = new JPasswordField();
-		Pass.setBounds(353, 258, 313, 44);
+		Pass.setBounds(106, 254, 250, 31);
 		Register.add(Pass);
 			
 		//Email
 		Email = new JTextField();
 		Email.setColumns(10);
-		Email.setBounds(353, 336, 313, 44);
+		Email.setBounds(106, 295, 250, 31);
 		Register.add(Email);
 		
 		//Phone Number (DOES NOT ACCEPT DIGITS MORE THAN 11)
@@ -160,14 +160,14 @@ public class Reg extends JFrame { // Extend JFrame to create a window
 			}
 		});
 		Phone.setColumns(10);
-		Phone.setBounds(353, 392, 313, 44);
+		Phone.setBounds(106, 345, 250, 31);
 		Register.add(Phone);
 		
 		//BUTTONS ====================================================================================
 
 		//Register Button
 		// Register Button
-        JButton btn_Submit = new JButton("");
+        JButton btn_Submit = new JButton("Submit");
         btn_Submit.setIcon(new ImageIcon(" "));
         btn_Submit.addActionListener(new ActionListener() {
             @SuppressWarnings("deprecation")
@@ -205,11 +205,11 @@ public class Reg extends JFrame { // Extend JFrame to create a window
                 }
             }
         });
-        btn_Submit.setBounds(550, 464, 116, 40);
+        btn_Submit.setBounds(240, 388, 116, 40);
         Register.add(btn_Submit);
 
         // Clear Button
-        btn_Clear = new JButton("");
+        btn_Clear = new JButton("Clear");
         btn_Clear.setIcon(new ImageIcon(" "));
         btn_Clear.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -220,11 +220,11 @@ public class Reg extends JFrame { // Extend JFrame to create a window
                 Phone.setText("");
             }
         });
-        btn_Clear.setBounds(353, 464, 116, 40);
+        btn_Clear.setBounds(114, 388, 116, 40);
         Register.add(btn_Clear);
 
         // Back Button
-        JButton btn_Back = new JButton("");
+        JButton btn_Back = new JButton("Back");
         btn_Back.setIcon(new ImageIcon(" "));
         btn_Back.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -233,13 +233,13 @@ public class Reg extends JFrame { // Extend JFrame to create a window
                 dispose();
             }
         });
-        btn_Back.setBounds(441, 558, 139, 40);
+        btn_Back.setBounds(170, 440, 139, 40);
         Register.add(btn_Back);
 
         // BACKGROUND ========================================
 
         JLabel lbl_Background = new JLabel("");
-        lbl_Background.setIcon(new ImageIcon(" "));
+        lbl_Background.setIcon(new ImageIcon("/Users/icarus/Downloads/Reg.png"));
         lbl_Background.setBounds(10, 0, 1026, 617);
         Register.add(lbl_Background);
     }
