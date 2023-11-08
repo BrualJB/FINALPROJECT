@@ -1,246 +1,200 @@
 import java.awt.EventQueue;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import javax.swing.JPasswordField;
-import javax.swing.JCheckBox;
 import java.awt.Font;
+import javax.swing.JPasswordField;
+import java.awt.Color;
+import javax.swing.JCheckBox;
+import java.awt.Toolkit;
 
-public class Reg extends JFrame { // Extend JFrame to create a window
+public class UserLog extends Accounts {
+    public JFrame userLogFrame;
+    private JTextField ApplicantUser;
+    private JPasswordField ApplicantPassword;
 
-    private JPanel Register;
-    private JTextField Name;
-    private JTextField User;
-    private JTextField Email;
-    private JTextField Phone;
-    private JButton btn_Clear;
-    private JPasswordField Pass;
-    private JCheckBox ShowHidePass;
-    private static final String FILE_PATH = "Accounts.txt";
+    private ArrayList<Accounts> accountsList = new ArrayList<Accounts>();
+
+    public UserLog() {
+        // Call the super constructor with null values or default values
+        super(null, null);
+        initialize();
+    }
+
+    private void initialize() {
+        userLogFrame = new JFrame();
+        userLogFrame.setIconImage(Toolkit.getDefaultToolkit().getImage("/Users/icarus/Downloads/BookWhispers (1).png"));
+        userLogFrame.setBounds(100, 100, 1026, 645);
+        userLogFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        userLogFrame.setLocationRelativeTo(null);
+        userLogFrame.getContentPane().setLayout(null);
+
+        // TEXT FIELDS
+
+        // Applicant Username
+        ApplicantUser = new JTextField();
+        ApplicantUser.setBounds(115, 172, 240, 40);
+        userLogFrame.getContentPane().add(ApplicantUser);
+        ApplicantUser.setColumns(10);
+
+        // Show and Hide Password
+        JCheckBox showHidePass = new JCheckBox("Show Password");
+        showHidePass.setBounds(115, 279, 114, 23);
+        showHidePass.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (showHidePass.isSelected()) {
+                    ApplicantPassword.setEchoChar((char) 0);
+                } else {
+                    ApplicantPassword.setEchoChar('•');
+                }
+            }
+        });
+        showHidePass.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
+        userLogFrame.getContentPane().add(showHidePass);
+
+        // Applicant Password
+        ApplicantPassword = new JPasswordField();
+        ApplicantPassword.setBounds(115, 237, 240, 40);
+        userLogFrame.getContentPane().add(ApplicantPassword);
+
+        // BUTTONS
+
+        // Login Button
+        JButton btn_ApplicantLog = new JButton("Login");
+        btn_ApplicantLog.setBounds(160, 314, 139, 40);
+        btn_ApplicantLog.setIcon(new ImageIcon(""));
+        btn_ApplicantLog.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String UsernameInput = ApplicantUser.getText();
+                String PasswordInput = ApplicantPassword.getText();
+
+                try {
+                    FileReader fileReader = new FileReader("Accounts.txt");
+                    BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+                    String line;
+                    while ((line = bufferedReader.readLine()) != null) {
+                        if (line.trim().isEmpty()) {
+                            continue;
+                        }
+                        String[] split = line.split(",");
+                        if (split.length >= 5) {
+                            String name = split[0];
+                            String username = split[1];
+                            String password = split[2];
+                            String email = split[3];
+                            String phone = split[4];
+                            Accounts account = new Accounts(username, password);
+                            accountsList.add(account);
+                        }
+                    }
+
+                    bufferedReader.close();
+                    fileReader.close();
+
+                } catch (IOException | ArrayIndexOutOfBoundsException ex) {
+                    ex.getMessage();
+                }
+
+                boolean found = false;
+
+                for (int i = 0; i < accountsList.size(); i++) {
+                    String username = accountsList.get(i).getUsername();
+                    String password = accountsList.get(i).getPassword();
+
+                    if (UsernameInput.equals(username) && PasswordInput.equals(password)) {
+                        JOptionPane.showMessageDialog(null, "Login Successfully!");
+                        found = true;
+
+                        UserPanel userpanel = new UserPanel();
+                        userpanel.setVisible(true);
+                        userLogFrame.dispose();
+                        break;
+
+                    } else if (UsernameInput.isEmpty() && PasswordInput.isEmpty()) {
+
+                        JOptionPane.showMessageDialog(null, "Invalid Username and Password!");
+                        found = true;
+                        break;
+
+                    } else if (UsernameInput.equals(username) && !PasswordInput.equals(password)) {
+
+                        JOptionPane.showMessageDialog(null, "Invalid Password!");
+                        found = true;
+                        break;
+
+                    } else if (!UsernameInput.equals(username) && PasswordInput.equals(password)) {
+
+                        JOptionPane.showMessageDialog(null, "Invalid Username!");
+                        found = true;
+                        break;
+
+                    }
+                }
+
+                if (!found) {
+                    JOptionPane.showMessageDialog(null, "Invalid Username and Password!");
+
+                }
+            }
+        });
+        userLogFrame.getContentPane().add(btn_ApplicantLog);
+
+        // Back Button
+        JButton BackButton = new JButton("Back");
+        BackButton.setBounds(160, 402, 139, 40);
+        BackButton.setIcon(new ImageIcon(" "));
+        BackButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                HomePage Home = new HomePage();
+                Home.setVisible(true);
+                userLogFrame.dispose();
+            }
+        });
+        userLogFrame.getContentPane().add(BackButton);
+
+        // Register Button
+        JButton btn_ApplicantReg = new JButton("Register");
+        btn_ApplicantReg.setBounds(160, 358, 139, 40);
+        btn_ApplicantReg.setBackground(Color.LIGHT_GRAY);
+        btn_ApplicantReg.setFont(new Font("Lucida Grande", Font.PLAIN, 12));
+        btn_ApplicantReg.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+                Reg Registration = new Reg();
+                Registration.setVisible(true);
+                userLogFrame.dispose();
+            }
+        });
+        userLogFrame.getContentPane().add(btn_ApplicantReg);
+
+        // BACKGROUND
+
+        JLabel ApplicantPass = new JLabel("New label");
+        ApplicantPass.setBounds(6, -47, 1115, 674);
+        ApplicantPass.setIcon(new ImageIcon("/Users/icarus/Downloads/Login.png"));
+        userLogFrame.getContentPane().add(ApplicantPass);
+    }
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    Reg frame = new Reg(); // Create an instance of the Reg class
-                    frame.setVisible(true); // Make the frame visible
+                    UserLog user = new UserLog();
+                    user.userLogFrame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
-    }
-
-    private void registerAccount(String name, String username, String password, String email, String phone) {
-        try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true));
-            writer.write(name + "," + username + "," + password + "," + email + "," + phone);
-            writer.newLine();
-            writer.close();
-
-            JOptionPane.showMessageDialog(null, "Successfully Registered");
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, "Error occurred while saving the account details");
-            ex.printStackTrace();
-        }
-    }
-
-    public Reg() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 1026, 645);
-        Register = new JPanel();
-        Register.setBorder(new EmptyBorder(5, 5, 5, 5));
-        setContentPane(Register);
-        setLocationRelativeTo(null);
-        Register.setLayout(null);
-		
-		//TEXT FIELDS ====================================================================================
-
-		//Name (ONLY ACCEPTS ALPHABETICAL CHARACTERS)
-		Name = new JTextField();
-		Name.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				char c = e.getKeyChar();
-				if(Character.isLetter(c) || Character.isWhitespace(c) || Character.isISOControl(c)) {
-					Name.setEditable(true);
-				} else {
-					Name.setEditable(false);
-				}							
-			}
-		});
-		Name.setBounds(106, 211, 250, 31);
-		Register.add(Name);
-		Name.setColumns(10);
-		
-		//User Name (DOES NOT ACCEPT SPACES)
-		User = new JTextField();
-		User.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				char c = e.getKeyChar();			
-				if(Character.isLetter(c) || Character.isISOControl(c) || Character.isDigit(c)) {
-					User.setEditable(true);
-				} else {
-					User.setEditable(false);
-				}
-			}
-		});
-		User.setColumns(10);
-		User.setBounds(106, 168, 250, 31);
-		Register.add(User);
-		
-		//Show and hide Password
-		ShowHidePass = new JCheckBox("Show Password");
-		ShowHidePass.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if(ShowHidePass.isSelected()) {
-					Pass.setEchoChar((char)0);
-				} else {
-					Pass.setEchoChar('•');
-				}
-			}
-		});
-		ShowHidePass.setFont(new Font("Lucida Grande", Font.PLAIN, 11));
-		ShowHidePass.setBounds(364, 258, 116, 23);
-		Register.add(ShowHidePass);
-		
-		//Password
-		Pass = new JPasswordField();
-		Pass.setBounds(106, 254, 250, 31);
-		Register.add(Pass);
-			
-		//Email
-		Email = new JTextField();
-		Email.setColumns(10);
-		Email.setBounds(106, 295, 250, 31);
-		Register.add(Email);
-		
-		//Phone Number (DOES NOT ACCEPT DIGITS MORE THAN 11)
-		Phone = new JTextField();
-		Phone.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent e) {
-							
-				//get JTextField String
-				String PhoneNum = Phone.getText();
-				
-				//get length of string
-				int length = PhoneNum.length();
-				char c = e.getKeyChar();
-				
-				//check for numbers 0-9
-				if (e.getKeyChar() >= '0' && e.getKeyChar() <= '9') {
-					if(length<11) {
-						//Editable 
-						Phone.setEditable(true);
-					} else {
-						//Not editable if length is more than 11
-						Phone.setEditable(false);
-						JOptionPane.showMessageDialog(null,"Only Input 11 Digits");
-					}
-				} else if (e.getExtendedKeyCode()== KeyEvent.VK_BACK_SPACE || e.getExtendedKeyCode()== KeyEvent.VK_DELETE) {
-					Phone.setEditable(true);
-				} else {
-					Phone.setEditable(false);
-					JOptionPane.showMessageDialog(null,"Only Input Numbers from 0 to 9");
-				}						
-			}
-		});
-		Phone.setColumns(10);
-		Phone.setBounds(106, 345, 250, 31);
-		Register.add(Phone);
-		
-		//BUTTONS ====================================================================================
-
-		//Register Button
-		// Register Button
-        JButton btn_Submit = new JButton("Submit");
-        btn_Submit.setIcon(new ImageIcon(" "));
-        btn_Submit.addActionListener(new ActionListener() {
-            @SuppressWarnings("deprecation")
-            public void actionPerformed(ActionEvent e) {
-                if (!Name.getText().equals("") && !User.getText().equals("") && !Pass.getPassword().equals("") && !Email.getText().equals("") && !Phone.getText().equals("")) {
-                    // Register the account and save details to a text file
-                    String name = Name.getText();
-                    String username = User.getText();
-                    String password = Pass.getText();
-                    String email = Email.getText();
-                    String phone = Phone.getText();
-
-                    // Validate email format
-                    if (!email.matches(".+@gmail\\.com$")) {
-                        JOptionPane.showMessageDialog(null, "Invalid email format. Email must be a valid Gmail address (e.g., example@gmail.com)");
-                        return;
-                    }
-
-                    // Validate phone number format
-                    if (!phone.matches("09\\d{9}")) {
-                        JOptionPane.showMessageDialog(null, "Invalid phone number format. Phone number must start with '09' and have 11 digits");
-                        return;
-                    }
-
-                    registerAccount(name, username, password, email, phone);
-
-                    Name.setText("");
-                    User.setText("");
-                    Pass.setText("");
-                    Email.setText("");
-                    Phone.setText("");
-
-                } else {
-                    JOptionPane.showMessageDialog(null, "Fill out all the fields and try again");
-                }
-            }
-        });
-        btn_Submit.setBounds(240, 388, 116, 40);
-        Register.add(btn_Submit);
-
-        // Clear Button
-        btn_Clear = new JButton("Clear");
-        btn_Clear.setIcon(new ImageIcon(" "));
-        btn_Clear.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                Name.setText("");
-                User.setText("");
-                Pass.setText("");
-                Email.setText("");
-                Phone.setText("");
-            }
-        });
-        btn_Clear.setBounds(114, 388, 116, 40);
-        Register.add(btn_Clear);
-
-        // Back Button
-        JButton btn_Back = new JButton("Back");
-        btn_Back.setIcon(new ImageIcon(" "));
-        btn_Back.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                UserLog userLogFrame = new UserLog();
-                userLogFrame.userLogFrame.setVisible(true);
-                dispose();
-            }
-        });
-        btn_Back.setBounds(170, 440, 139, 40);
-        Register.add(btn_Back);
-
-        // BACKGROUND ========================================
-
-        JLabel lbl_Background = new JLabel("");
-        lbl_Background.setIcon(new ImageIcon("/Users/icarus/Downloads/Reg.png"));
-        lbl_Background.setBounds(10, 0, 1026, 617);
-        Register.add(lbl_Background);
     }
 }
