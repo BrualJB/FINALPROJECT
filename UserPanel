@@ -63,6 +63,7 @@ public class UserPanel extends JFrame {
     }
 
     // Loads Data from the "books.txt" file to the table
+ // Loads Data from the "books.txt" file to the table
     private void loadDataFromFile() {
         try {
             File file = new File("books.txt");
@@ -70,14 +71,19 @@ public class UserPanel extends JFrame {
                 BufferedReader br = new BufferedReader(new FileReader(file));
                 String line;
                 while ((line = br.readLine()) != null) {
-                    String[] data = line.split(",");
-                    String title = data[0];
-                    String author = data[1];
-                    String synopsis = data[2];
-                    int numOfPages = Integer.parseInt(data[3]);
-                    String genre = data[4];
-                    books.add(new Book(title, author, synopsis, numOfPages, genre));
-                    tableModel.addRow(new Object[]{title, author, genre, numOfPages});
+                    String[] data = line.split("/");
+                    if (data.length == 5) {
+                        String title = data[0];
+                        String author = data[1];
+                        String synopsis = data[2];
+                        int numOfPages = Integer.parseInt(data[3]);
+                        String genre = data[4];
+                        books.add(new Book(title, author, synopsis, numOfPages, genre));
+                        tableModel.addRow(new Object[]{title, author, genre, numOfPages});
+                    } else {
+                        // Handle invalid data format
+                        System.out.println("Invalid data format: " + line);
+                    }
                 }
                 br.close();
             }
@@ -85,6 +91,7 @@ public class UserPanel extends JFrame {
             e.printStackTrace();
         }
     }
+
 
     // Filter books by genre
     private void filterBooksByGenre(String genre) {
@@ -105,6 +112,7 @@ public class UserPanel extends JFrame {
     }
 
     // Show a new frame with book details, including synopsis
+ // Show a new frame with book details, including synopsis
     private void showBookDetails(Book book) {
         JFrame detailsFrame = new JFrame("Book Details");
         detailsFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -112,6 +120,11 @@ public class UserPanel extends JFrame {
 
         JTextArea detailsArea = new JTextArea();
         detailsArea.setEditable(false);
+        
+        // Enable line wrap and word wrap
+        detailsArea.setLineWrap(true);
+        detailsArea.setWrapStyleWord(true);
+
         detailsArea.append("Title: " + book.title + "\n");
         detailsArea.append("Author: " + book.author + "\n");
         detailsArea.append("Genre: " + book.genre + "\n");
@@ -123,6 +136,7 @@ public class UserPanel extends JFrame {
         detailsFrame.setLocationRelativeTo(null);
         detailsFrame.setVisible(true);
     }
+
 
     private void initBookTable() {
         String[] columnNames = {"Title", "Author", "Genre", "Number of Pages"};
