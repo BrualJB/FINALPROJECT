@@ -257,7 +257,7 @@ public class AdminPanel extends JFrame {
         }
     }
 
-    private void loadDataFromFile() {
+     void loadDataFromFile() {
         try (BufferedReader reader = new BufferedReader(new FileReader("books.txt"))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -270,6 +270,9 @@ public class AdminPanel extends JFrame {
                     String genre = parts[4];
                     books.add(new Book(title, author, synopsis, numOfPages, genre));
                     tableModel.addRow(new Object[]{title, author, genre, String.valueOf(numOfPages)});
+                    
+                    // Add a log message to check if a book is loaded
+                    System.out.println("Loaded book: " + title);
                 }
             }
         } catch (IOException e) {
